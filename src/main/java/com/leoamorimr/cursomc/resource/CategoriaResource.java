@@ -1,4 +1,4 @@
-package com.leoamorimr.cursomc.resources;
+package com.leoamorimr.cursomc.resource;
 
 import com.leoamorimr.cursomc.domain.Categoria;
 import com.leoamorimr.cursomc.service.CategoriaService;
@@ -20,7 +20,6 @@ public class CategoriaResource {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> find(@PathVariable Integer id) {
         Categoria obj = service.buscar(id);
-
         return ResponseEntity.ok().body(obj);
     }
 
