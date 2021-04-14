@@ -4,10 +4,15 @@ import java.util.Arrays;
 
 import com.leoamorimr.cursomc.domain.Categoria;
 import com.leoamorimr.cursomc.domain.Cidade;
+import com.leoamorimr.cursomc.domain.Cliente;
+import com.leoamorimr.cursomc.domain.Endereco;
 import com.leoamorimr.cursomc.domain.Estado;
 import com.leoamorimr.cursomc.domain.Produto;
+import com.leoamorimr.cursomc.domain.enums.TipoCliente;
 import com.leoamorimr.cursomc.repository.CategoriaRepository;
 import com.leoamorimr.cursomc.repository.CidadeRepository;
+import com.leoamorimr.cursomc.repository.ClienteRepository;
+import com.leoamorimr.cursomc.repository.EnderecoRepository;
 import com.leoamorimr.cursomc.repository.EstadoRepository;
 import com.leoamorimr.cursomc.repository.ProdutoRepository;
 
@@ -27,6 +32,10 @@ public class CursomcApplication implements CommandLineRunner {
 	private CidadeRepository cidadeRepository;
 	@Autowired
 	private EstadoRepository estadoRepository;
+	@Autowired
+	private ClienteRepository clienteRepository;
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -67,6 +76,18 @@ public class CursomcApplication implements CommandLineRunner {
 
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
+
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "12313123", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().addAll(Arrays.asList("3222-2222", "9 99999-99"));
+
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "32323232", cli1, c1);
+		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "sala 800", "Centro", "32323232", cli1, c2);
+
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+
+		// PERSISTENCIA DOS CLIENTE E ENDEREÇO
+		clienteRepository.save(cli1);
+		enderecoRepository.saveAll(Arrays.asList(e1, e2));
 	}
 
 }
