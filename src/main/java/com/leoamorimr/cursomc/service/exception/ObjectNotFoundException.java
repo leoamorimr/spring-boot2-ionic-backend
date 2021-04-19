@@ -1,4 +1,4 @@
-package com.leoamorimr.cursomc.exception;
+package com.leoamorimr.cursomc.service.exception;
 
 public class ObjectNotFoundException extends RuntimeException {
 
