@@ -1,20 +1,21 @@
 package com.leoamorimr.cursomc.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.leoamorimr.cursomc.domain.Cliente;
+import com.leoamorimr.cursomc.dto.ClienteDTO;
+import com.leoamorimr.cursomc.repository.ClienteRepository;
+import com.leoamorimr.cursomc.repository.EnderecoRepository;
+import com.leoamorimr.cursomc.service.exception.DataIntegrityException;
+import com.leoamorimr.cursomc.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.leoamorimr.cursomc.domain.Cliente;
-import com.leoamorimr.cursomc.dto.ClienteDTO;
-import com.leoamorimr.cursomc.repository.ClienteRepository;
-import com.leoamorimr.cursomc.service.exception.DataIntegrityException;
-import com.leoamorimr.cursomc.service.exception.ObjectNotFoundException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -22,15 +23,23 @@ public class ClienteService {
     @Autowired
     private ClienteRepository repo;
 
+    @Autowired
+    private EnderecoRepository enderecoRepository;
+
     public Cliente find(Integer id) {
         Optional<Cliente> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
     }
 
+    @Transactional
     public Cliente insert(Cliente obj) {
         obj.setId(null);
-        return repo.save(obj);
+        obj = repo.save(obj);
+
+        //Salvando os Endereços do cliente na mesma Transação.
+        enderecoRepository.saveAll(obj.getEnderecos());
+        return obj;
     }
 
     public Cliente update(Cliente obj) {
@@ -49,8 +58,7 @@ public class ClienteService {
     }
 
     public List<Cliente> findAll() {
-        List<Cliente> clientes = repo.findAll();
-        return clientes;
+        return repo.findAll();
     }
 
     public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
