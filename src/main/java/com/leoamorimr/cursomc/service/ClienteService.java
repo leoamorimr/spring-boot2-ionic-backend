@@ -28,9 +28,6 @@ public class ClienteService {
     private ClienteRepository repo;
 
     @Autowired
-    private EnderecoRepository enderecoRepo;
-
-    @Autowired
     private EnderecoRepository enderecoRepository;
 
     public Cliente find(Integer id) {
