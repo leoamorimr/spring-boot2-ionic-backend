@@ -39,7 +39,6 @@ public class Cliente implements Serializable {
      *
      * @JsonManagedReference para não ocorrer erro de referencia cíclica no Json.
      */
-    @JsonIgnore
     @ElementCollection
     @CollectionTable(name = "TELEFONE")
     private Set<String> telefones = new HashSet<>();
