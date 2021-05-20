@@ -2,7 +2,6 @@ package com.leoamorimr.cursomc.service;
 
 import com.leoamorimr.cursomc.domain.Categoria;
 import com.leoamorimr.cursomc.domain.Produto;
-import com.leoamorimr.cursomc.domain.Produto;
 import com.leoamorimr.cursomc.repository.CategoriaRepository;
 import com.leoamorimr.cursomc.repository.ProdutoRepository;
 import com.leoamorimr.cursomc.service.exception.ObjectNotFoundException;
@@ -24,7 +23,7 @@ public class ProdutoService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    public Produto buscar(Integer id) {
+    public Produto find(Integer id) {
         Optional<Produto> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Produto.class.getName()));
@@ -35,6 +34,4 @@ public class ProdutoService {
         List<Categoria> categorias = categoriaRepository.findAllById(ids);
         return repo.search(nome, categorias, pageRequest);
     }
-
-
 }
