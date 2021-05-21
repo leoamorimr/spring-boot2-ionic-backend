@@ -1,21 +1,20 @@
 package com.leoamorimr.cursomc.service;
 
-import java.util.Date;
-import java.util.Optional;
-
 import com.leoamorimr.cursomc.domain.ItemPedido;
 import com.leoamorimr.cursomc.domain.PagamentoComBoleto;
+import com.leoamorimr.cursomc.domain.Pedido;
 import com.leoamorimr.cursomc.domain.enums.EstadoPagamento;
 import com.leoamorimr.cursomc.repository.ItemPedidoRepository;
 import com.leoamorimr.cursomc.repository.PagamentoRepository;
+import com.leoamorimr.cursomc.repository.PedidoRepository;
 import com.leoamorimr.cursomc.repository.ProdutoRepository;
+import com.leoamorimr.cursomc.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.leoamorimr.cursomc.domain.Pedido;
-import com.leoamorimr.cursomc.repository.PedidoRepository;
-import com.leoamorimr.cursomc.service.exception.ObjectNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class PedidoService {
@@ -42,6 +41,8 @@ public class PedidoService {
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
 
+    @Autowired
+    private EmailService emailService;
 
     public Pedido buscar(Integer id) {
         Optional<Pedido> obj = repo.findById(id);
@@ -70,7 +71,8 @@ public class PedidoService {
             ip.setPedido(obj);
         }
         itemPedidoRepository.saveAll(obj.getItems());
-        System.out.println(obj);
+        emailService.sendOrderConfirmationEmail(obj);
+
         return obj;
     }
 
