@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.leoamorimr.cursomc.domain.Categoria;
@@ -36,22 +37,33 @@ public class DBService {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+
 	@Autowired
 	private ProdutoRepository produtoRepository;
+
 	@Autowired
 	private CidadeRepository cidadeRepository;
+
 	@Autowired
 	private EstadoRepository estadoRepository;
+
 	@Autowired
 	private ClienteRepository clienteRepository;
+
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+
 	@Autowired
 	private PedidoRepository pedidoRepository;
+
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder pe;
 
 	public void instantiateTestDatabase() throws ParseException {
 		Categoria cat1 = new Categoria(null, "Informática");
@@ -113,7 +125,8 @@ public class DBService {
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-		Cliente cli1 = new Cliente(null, "Maria Silva", "leoamorimr@gmail.com", "12313123", TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "Maria Silva", "leoamorimr@gmail.com", "12313123", TipoCliente.PESSOAFISICA,
+				pe.encode("123"));
 		cli1.getTelefones().addAll(Arrays.asList("3222-2222", "9 99999-99"));
 
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "32323232", cli1, c1);
